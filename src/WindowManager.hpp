@@ -50,6 +50,13 @@ public:
   void removeWindow(Window *);
   void setWindowPosition(Window *, int x, int y);
   void setWindowDimensions(Window *, int x, int y);
+  template <typename W> bool isWindowOpen() {
+    for (AddedWindow &aw : this->windows) {
+      if (dynamic_cast<W *>(aw.window)) {
+        return true;
+      }
+    }
+    return false;
+  }
 };
-
 #endif

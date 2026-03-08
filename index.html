@@ -43,26 +43,15 @@
     var progressElement = document.getElementById('progress');
     var spinnerElement = document.getElementById('spinner');
     var canvasElement = document.getElementById('canvas');
-    if (window.screen.width < 320 || window.screen.height < 480) {
-      alert("Your Browser Window is too small")
-      statusElement.innerHTML = "Your Browser is too small";
-      canvasElement.display = false;
+    if (window.screen.width < 320 || window.screen.height < 320) {
+      statusElement.innerHTML = "Your Browser Window or device is too small";
+      canvasElement.hidden = true;
+      spinnerElement.hidden = true;
     } else {
       canvasElement.addEventListener('webglcontextlost', (e) => {
         alert('WebGL context lost. You will need to reload the page.');
         e.preventDefault();
       }, false);
-
-      window.addEventListener('resize', () => {
-        if (window.screen.width < 320 || window.screen.height < 480) {
-          statusElement.innerHTML = "Your Browser is too small";
-          canvasElement.display = false;
-        } else {
-          statusElement.innerHTML = "";
-          canvasElement.display = true;
-        }
-
-      });
 
       var Module = {
         print(...args) {

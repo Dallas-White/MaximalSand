@@ -23,7 +23,7 @@
 
 const int MINIMUM_WIDTH = 320;
 
-const int MINIMUM_HEIGHT = 480;
+const int MINIMUM_HEIGHT = 320;
 
 int newSandColor;
 int width = 1600;

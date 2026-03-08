@@ -29,9 +29,11 @@ bool ColorShowComponent::handleLeftMouseButtonDown(int x, int y) {
 }
 
 bool ColorShowComponent::handleLeftMouseButtonUp(int x, int y) {
+  if (this->wm->isWindowOpen<PaletteWindow>())
+    return true;
   this->wm->addWindow(new PaletteWindow(this->sw, this->wm), 0, this->height,
                       std::min(this->wm->getWidth(), 300),
-                      std::min(this->wm->getHeight(), 400));
+                      std::min(this->wm->getHeight() - this->height, 400));
   return true;
 }
 

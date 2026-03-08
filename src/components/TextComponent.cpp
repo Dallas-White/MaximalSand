@@ -17,7 +17,7 @@ void TextComponent::draw(uint32_t *buffer, int x, int y, int screen_width) {
 }
 
 int TextComponent::getMinimumHeight(int width) {
-  return (this->text.size() * 4) + 2;
+  return (this->text.size() * 12);
 }
 
 int TextComponent::getMinimumWidth() {
