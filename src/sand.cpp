@@ -4,6 +4,7 @@
 #include <SDL2/SDL_stdinc.h>
 #include <barrier>
 #include <cassert>
+#include <chrono>
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
@@ -14,6 +15,7 @@ const bool COUNT_SAND_DEBUG = false;
 const bool BOUNCE_SAND_DEBUG = false;
 const bool SHOW_ACTIVE_CHUNKS_DEBUG = false;
 const int THREAD_COUNT = 4;
+const int FRAMERATE_LIMIT = 480;
 
 void Sand::onFinishFrame() {
   this->frameLock.lock();
@@ -77,6 +79,15 @@ void Sand::onFinishFrame() {
   }
   this->cm.startCycle();
   this->frameLock.unlock();
+#ifndef SINGLETHREAD
+  if (std::chrono::high_resolution_clock().now() - this->frameStartTime <
+      std::chrono::milliseconds(1000 / FRAMERATE_LIMIT)) {
+    std::this_thread::sleep_for(
+        std::chrono::milliseconds(1000 / FRAMERATE_LIMIT) -
+        (std::chrono::high_resolution_clock().now() - this->frameStartTime));
+  }
+  this->frameStartTime = std::chrono::high_resolution_clock().now();
+#endif
 }
 
 #ifndef SINGLETHREAD
@@ -98,6 +109,7 @@ Sand::Sand(int w, int h) : cm(w, h) {
   memset(pixels, 0, width * height * sizeof(Uint32));
   memset(nextFrame, 0, width * height * sizeof(Uint32));
 #ifndef SINGLETHREAD
+  this->frameStartTime = std::chrono::high_resolution_clock().now();
   this->barrier = new std::barrier<std::function<void()>>(
       THREAD_COUNT, [this]() { this->onBarrierFinished(); });
   for (int i = 0; i < THREAD_COUNT; i++) {

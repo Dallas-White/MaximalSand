@@ -1,6 +1,7 @@
 #include "ColorShowComponent.hpp"
 #include "../utils.hpp"
 #include "../windows/PaletteWindow.hpp"
+#include <iostream>
 const Uint8 OUTLINE_PIXELS = 1;
 ColorShowComponent::ColorShowComponent(SandComponent *sw, WindowManager *wm,
                                        int padding) {
@@ -31,6 +32,7 @@ bool ColorShowComponent::handleLeftMouseButtonDown(int x, int y) {
 bool ColorShowComponent::handleLeftMouseButtonUp(int x, int y) {
   if (this->wm->isWindowOpen<PaletteWindow>())
     return true;
+  std::cout << this->wm->getHeight() << std::endl;
   this->wm->addWindow(new PaletteWindow(this->sw, this->wm), 0, this->height,
                       std::min(this->wm->getWidth(), 300),
                       std::min(this->wm->getHeight() - this->height, 400));

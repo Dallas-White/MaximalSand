@@ -1,4 +1,5 @@
 
+#include <chrono>
 #ifndef SAND
 #include "chunkManager.hpp"
 #include "utils.hpp"
@@ -17,6 +18,7 @@ private:
   std::vector<std::thread> threads;
   std::barrier<std::function<void()>> *barrier;
   void onBarrierFinished();
+  std::chrono::time_point<std::chrono::high_resolution_clock> frameStartTime;
 #else
   XorShift32 rng;
 #endif

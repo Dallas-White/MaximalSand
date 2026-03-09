@@ -36,16 +36,6 @@ Uint32 *outputPixels = new Uint32[width * height];
 bool running = true;
 uint32_t mouseState;
 
-#ifdef __EMSCRIPTEN__
-static EM_BOOL on_resize(int eventType, const EmscriptenUiEvent *e, void *) {
-  int w, h;
-  emscripten_get_canvas_element_size("#canvas", &w, &h);
-  SDL_SetWindowSize(window, w, h);
-  return EM_TRUE;
-}
-
-#endif
-
 void handleResize() {
   SDL_SetWindowSize(window, width, height);
   SDL_DestroyTexture(texture);
@@ -58,6 +48,19 @@ void handleResize() {
   SDL_RenderSetLogicalSize(renderer, width, height);
   wm->setDimensions(width, height);
 }
+
+#ifdef __EMSCRIPTEN__
+static EM_BOOL on_resize(int eventType, const EmscriptenUiEvent *e, void *) {
+  int w, h;
+  emscripten_get_canvas_element_size("#canvas", &w, &h);
+  SDL_SetWindowSize(window, w, h);
+  width = w;
+  height = h;
+  handleResize();
+  return EM_TRUE;
+}
+#endif
+
 inline void loop() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
@@ -133,7 +136,6 @@ int main() {
   SDL_SetHint(SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT, "#canvas");
   emscripten_set_resize_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, nullptr,
                                  EM_TRUE, on_resize);
-
   emscripten_set_main_loop(loop, 0, 1);
 #endif
   SDL_SetWindowMinimumSize(window, MINIMUM_WIDTH, MINIMUM_HEIGHT);
